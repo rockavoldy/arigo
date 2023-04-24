@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"errors"
 	"net/http"
+	neturl "net/url"
 	"os"
 
 	"github.com/cenkalti/rpc2"
@@ -68,6 +69,15 @@ func NewClient(rpcClient *rpc2.Client, authToken string) *Client {
 // It returns a new client.
 func DialContext(ctx context.Context, url string, authToken string) (client *Client, err error) {
 	dialer := websocket.Dialer{}
+
+	urlParsed, err := neturl.ParseRequestURI(url)
+	if err != nil {
+		return
+	}
+	if urlMethod := urlParsed.Scheme; urlMethod != "ws" && urlMethod != "wss" {
+		err = errors.New("invalid url scheme. must be ws or wss")
+		return
+	}
 
 	ws, _, err := dialer.DialContext(ctx, url, http.Header{})
 	if err != nil {
