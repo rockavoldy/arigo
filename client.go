@@ -12,8 +12,8 @@ import (
 	"github.com/cenkalti/rpc2"
 	"github.com/cenkalti/rpc2/jsonrpc"
 	"github.com/gorilla/websocket"
-	"github.com/siku2/arigo/internal/pkg/wsrpc"
-	"github.com/siku2/arigo/pkg/aria2proto"
+	"github.com/rockavoldy/arigo/internal/pkg/wsrpc"
+	"github.com/rockavoldy/arigo/pkg/aria2proto"
 )
 
 const (
@@ -76,7 +76,7 @@ func DialContext(ctx context.Context, url string, authToken string) (client *Cli
 	}
 	if urlMethod := urlParsed.Scheme; urlMethod != "ws" && urlMethod != "wss" {
 		err = errors.New("invalid url scheme. must be ws or wss")
-		return
+		panic(err)
 	}
 
 	ws, _, err := dialer.DialContext(ctx, url, http.Header{})
